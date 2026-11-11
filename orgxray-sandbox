@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# orgxray-sandbox — kjør orgxray-pipeline isolert i Docker.
+#
+#   /data  = orgxray-arkivets REELLE rot (følger symlinks til disk),
+#            mountet READ-ONLY — arkivet kan ikke tukles med fra innsiden
+#   /work  = $DATA/.sandbox-work, read-write (ferske kloner + rapporter
+#            denne kjøringen skriver; overlever mellom kjøringer)
+#
+# Rapporter seedes fra /data før kjøring (skip/rescan-logikk virker), og
+# kun filer endret UNDER denne kjøringen kopieres tilbake — aldri
+# overskriver vi en rapport som er newer enn sandkassen.
+#
+# Bruk:  orgxray-box/bin/orgxray-sandbox members anthropics --committers --history
+#        orgxray-box/bin/orgxray-sandbox quick /data/repos/supabase/storage --days 60
+#        orgxray-box/bin/orgxray-sandbox scan navikt --repos-file /work/targets.txt
+set -euo pipefail
+
+BASE_HOST="${ORGXRAY_BASE_HOST:-$HOME/arkiv/org-xray}"
+IMAGE="${ORGXRAY_IMAGE:-orgxray-box:latest}"
+OXRAY="${ORGXRAY_BIN:-$HOME/.local/bin/orgxray}"
+
+# Finn reell data-rot: repos/<org> er symlinker til den flyttede disken.
+# Uten symlinker (frisk maskin) er BASE_HOST selv rota.
+DATA_HOST="$BASE_HOST"
+first_link=$(find "$BASE_HOST/repos" -maxdepth 1 -type l -print -quit 2>/dev/null || true)
+if [ -n "$first_link" ]; then
+  org_real=$(readlink -f "$first_link")
+  cand=$(dirname "$(dirname "$org_real")")
+  if [ -d "$cand/reports" ]; then DATA_HOST="$cand"; fi
+fi
+WORK="${ORGXRAY_WORK:-$DATA_HOST/.sandbox-work}"
+
+mkdir -p "$WORK/repos" "$WORK/reports" "$WORK/people"
+cp -rn "$DATA_HOST/reports/." "$WORK/reports/" 2>/dev/null || true
+
+MOUNTS=( -v "$DATA_HOST:/data:ro" -v "$WORK:/work" -v "$OXRAY:/usr/local/bin/orgxray:ro" )
+# rules/ kan ligge på nvme-siden (opprettet etter migrering) — kopier til
+# /work og pek ORGXRAY_RULES dit (/data er ro, kan ikke mountes oppå).
+if [ -d "$BASE_HOST/rules" ]; then
+  mkdir -p "$WORK/rules"; cp -rn "$BASE_HOST/rules/." "$WORK/rules/" 2>/dev/null || true
+fi
+
+START=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+# Bygg-stempel beregnes PÅ VERTEN: i containeren er bare orgxray-fila
+# bind-mountet, ikke repoet — git-commit og dirty ville forsvinne.
+# Samme fil = samme sha256, så stemplene er sammenlignbare.
+OX_HASH=$(sha256sum "$OXRAY" | cut -c1-12)
+OX_DATE=$(date -r "$OXRAY" +%Y-%m-%d)
+OX_STAMP="$OX_HASH@$OX_DATE"
+OX_COMMIT=$(git -C "$(dirname "$OXRAY")" rev-parse --short HEAD 2>/dev/null || true)
+if [ -n "$OX_COMMIT" ]; then
+  OX_STAMP="$OX_STAMP+$OX_COMMIT"
+  if [ -n "$(git -C "$(dirname "$OXRAY")" status --porcelain -- "$OXRAY" 2>/dev/null)" ]; then
+    OX_STAMP="$OX_STAMP+dirty"
+  fi
+fi
+# Nett: statisk scanning (quick/deep/triage/shortlist) kjører --network none.
+# Kommandoer som kloner eller treffer GitHub-API får bridge — og valget er
+# bevisst: ORGXRAY_NET=none tvinger offline uansett kommando.
+NET="${ORGXRAY_NET:-}"
+if [ -z "$NET" ]; then
+  case "${1:-}" in
+    scan|history|members|discover|people|committers|watch|watch-members|gists|self) NET=bridge ;;
+    *) NET=none ;;
+  esac
+fi
+docker run --rm \
+  --read-only --tmpfs /tmp:rw,nosuid,size=2g \
+  --cap-drop ALL --security-opt no-new-privileges \
+  --network "$NET" \
+  --user "${ORGXRAY_UID:-1000}:${ORGXRAY_GID:-1000}" -e HOME=/tmp \
+  "${MOUNTS[@]}" \
+  -e GH_TOKEN="${GH_TOKEN:-}" \
+  -e ORGXRAY_BASE=/data \
+  -e ORGXRAY_REPOS=/work/repos \
+  -e ORGXRAY_REPORTS=/work/reports \
+  -e ORGXRAY_PEOPLE=/work/people \
+  -e ORGXRAY_RULES=/work/rules \
+  -e ORGXRAY_BUILD_STAMP="$OX_STAMP" \
+  --entrypoint /usr/local/bin/orgxray \
+  "$IMAGE" "$@"
+
+# Kopier tilbake kun filer som ble skrevet i denne kjøringen, og bare hvis
+# verts-kopien ikke er newer (beskytter mot race med host-side jobber).
+find "$WORK/reports" -type f -name '*.json' -newermt "$START" | \
+while IFS= read -r f; do
+  b=$(basename "$f"); h="$DATA_HOST/reports/$b"
+  if [ ! -f "$h" ] || [ "$h" -ot "$f" ]; then cp "$f" "$h"; fi
+done
