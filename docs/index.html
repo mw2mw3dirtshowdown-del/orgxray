@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sondre K — Security & AI Automation Engineer</title>
 <style>
-:root{--bg:#0b0e14;--fg:#e6e9ef;--dim:#9aa3b2;--acc:#58a6ff;--ok:#3fb950;--warn:#d29922}
+:root{--bg:#0b0e14;--fg:#e6e9ef;--dim:#9aa3b2;--acc:#58a6ff;--ok:#3fb950}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;max-width:820px;margin:0 auto;padding:48px 20px}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;max-width:860px;margin:0 auto;padding:48px 20px}
 h1{font-size:2em;letter-spacing:-.02em}
-h2{font-size:1.25em;margin:2em 0 .5em;color:var(--acc)}
+h2{font-size:1.25em;margin:2.2em 0 .6em;color:var(--acc)}
 .sub{color:var(--dim);margin:.4em 0 1.5em}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:1em 0}
 .card{background:#12161f;border:1px solid #21262d;border-radius:10px;padding:16px}
@@ -17,10 +17,11 @@ h2{font-size:1.25em;margin:2em 0 .5em;color:var(--acc)}
 .lbl{color:var(--dim);font-size:.85em}
 a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
 ul{padding-left:1.3em}li{margin:.3em 0}
+.svc{background:#12161f;border:1px solid #21262d;border-radius:12px;padding:20px 22px;margin:14px 0}
+.svc h3{margin:0 0 .3em;font-size:1.05em}
+.price{color:var(--ok);font-weight:600;margin:.5em 0}
+.deliv{color:var(--dim);font-size:.92em}
 .tag{display:inline-block;background:#1f6feb33;color:var(--acc);border-radius:20px;padding:2px 10px;font-size:.8em;margin:2px 4px 2px 0}
-code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em}
-.bar{height:6px;background:#21262d;border-radius:3px;margin-top:8px;overflow:hidden}
-.bar>i{display:block;height:100%;background:var(--ok)}
 </style>
 </head>
 <body>
@@ -31,35 +32,52 @@ code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em}
 <div class="grid">
 <div class="card"><div class="num">83</div><div class="lbl">verified LIVE credentials (HTTP 200 confirmed), public-source sweeps</div></div>
 <div class="card"><div class="num">1,404</div><div class="lbl">candidate files scanned via GitHub code-search + git history</div></div>
-<div class="card"><div class="num">373</div><div class="lbl">JWTs extracted, role-filtered, live-verified read-only</div></div>
 <div class="card"><div class="num">79</div><div class="lbl">redacted disclosure drafts — human review only, never auto-sent</div></div>
+<div class="card"><div class="num">24/7</div><div class="lbl">monitoring bots &amp; pipelines running on owned infrastructure</div></div>
 </div>
 
-<h2>OrgXray</h2>
-<p>Local-first recon + Git-history secret scanner for <b>authorized responsible disclosure</b>. Single-file Python CLI, containerized sandbox, incremental scans, evidence-backed disclosure pipeline.</p>
+<h2>Services — fixed scope, evidence-backed delivery</h2>
+
+<div class="svc">
+<h3>1 · GitHub Secret &amp; Security Audit</h3>
+<div class="price">from $300 — repo or org sweep</div>
+<div class="deliv">Full git-history secret scan (gitleaks + custom detectors), dependency/IaC checks, verified-vs-fixture triage, written report with file:line evidence and exact fixes. Same pipeline that produced 83 verified LIVE credentials.</div>
+</div>
+
+<div class="svc">
+<h3>2 · MCP Server &amp; AI Agent Integration</h3>
+<div class="price">from $400 — scoped to your stack</div>
+<div class="deliv">Production MCP servers (Python/TS) exposing your APIs/tools to Claude, ChatGPT or voice agents — OAuth, per-tool permissions, audit logging, confirm-before-act gates. Voice-agent wiring (Vapi/Retell/custom STT→LLM→TTS) included on request.</div>
+</div>
+
+<div class="svc">
+<h3>3 · Workflow Automation &amp; Scraping</h3>
+<div class="price">from $300 — per workflow</div>
+<div class="deliv">Scraping, data pipelines, n8n/Make/Zapier or custom Python orchestration, 24/7 monitoring bots with alerting. Sample batch delivered before full run.</div>
+</div>
+
+<div class="svc">
+<h3>4 · AI Agent Security Review</h3>
+<div class="price">from $450 — 3–4 h written review</div>
+<div class="deliv">Review of agent workflows: secrets &amp; token permissions, sandboxing around the agent, prompt-injection exposure, architecture simplification. Findings ranked by severity, each with file + suggested fix.</div>
+</div>
+
+<div class="svc">
+<h3>5 · Custom Builds</h3>
+<div class="price">scoped — send the brief</div>
+<div class="deliv">Anything a script can do: internal tools, dashboards, Telegram/Discord bots, CI hardening, Linux/server automation, reverse-engineering support.</div>
+</div>
+
+<h2>Proof</h2>
+<p><b>OrgXray</b> — local-first recon + Git-history secret scanner for authorized responsible disclosure. Single-file Python CLI, containerized sandbox, honest outcome classes (LIVE / HTTP401 / UNVERIFIED / fixture).</p>
 <ul>
-<li>Detection tuned on measured token-efficiency (cl100k_base) — rare-not-random secrets, not just entropy</li>
-<li>Honest outcome classes: LIVE / HTTP401 / UNVERIFIED / fixture — no inflated counts</li>
-<li>79 disclosure drafts generated; nothing sent without human review</li>
+<li><a href="https://github.com/mw2mw3dirtshowdown-del/orgxray">github.com/mw2mw3dirtshowdown-del/orgxray</a></li>
+<li><a href="https://github.com/mw2mw3dirtshowdown-del/orgxray/blob/master/CASE-STUDY.md">CASE-STUDY.md</a> — full pipeline + honest numbers</li>
 </ul>
-<p><a href="https://github.com/mw2mw3dirtshowdown-del/orgxray">github.com/mw2mw3dirtshowdown-del/orgxray</a> · <a href="https://github.com/mw2mw3dirtshowdown-del/orgxray/blob/master/CASE-STUDY.md">CASE-STUDY.md</a></p>
+<p><b>Also in production:</b> personal voice agent (STT → LLM → TTS, persistent memory, tool-calling, TLS, self-hosted Linux) · multi-agent orchestration with permission scoping · scraping/monitoring bots.</p>
 
-<h2>Also running in production</h2>
-<ul>
-<li><b>Voice agent</b> — STT → LLM → TTS with persistent memory, tool-calling, scheduled tasks, TLS, self-hosted Linux</li>
-<li><b>Agent infrastructure</b> — multi-agent orchestration, MCP-style tool routing with permission scoping and confirm-before-act gates</li>
-<li><b>Automation</b> — scraping, data pipelines, 24/7 monitoring bots</li>
-</ul>
-
-<h2>Services</h2>
-<p>
-<span class="tag">MCP server / agent integration</span>
-<span class="tag">GitHub secret &amp; security audit</span>
-<span class="tag">Workflow automation &amp; scraping</span>
-<span class="tag">Responsible-disclosure reporting</span>
-</p>
-
-<h2>Contact</h2>
-<p>Email via GitHub profile · Norway-based, clients worldwide · English &amp; Norwegian.</p>
+<h2>How to buy</h2>
+<p>Fastest: <a href="https://www.fiverr.com/sondree_">Fiverr — @sondree_</a> (order a gig, escrow-protected). Direct: message me the brief — scope, timeline and fixed price come back within 24 h.</p>
+<p>NORWAY-based · clients worldwide · English &amp; Norwegian · <a href="https://github.com/mw2mw3dirtshowdown-del">github.com/mw2mw3dirtshowdown-del</a></p>
 </body>
 </html>
