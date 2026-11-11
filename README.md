@@ -4,9 +4,9 @@ Local-first reconnaissance and Git-history secret scanner for **authorized
 responsible disclosure**. Single-file Python CLI + containerized sandbox +
 GitHub code-search sweeps.
 
-**Verified result (2026-11-11):** one targeted Supabase sweep —
-1,404 candidate files → 373 JWTs → **78 verified LIVE `service_role`
-keys** (HTTP 200 against production REST APIs, read-only). See
+**Verified result (2026-11-11):** an authorized disclosure pipeline that
+finds credential exposures in public code, verifies each one read-only,
+and produces redacted disclosure drafts — never auto-sent. See
 `CASE-STUDY.md` for the full pipeline and honest numbers.
 
 ## What it does
@@ -52,7 +52,7 @@ keys** (HTTP 200 against production REST APIs, read-only). See
 
 ## Verification discipline
 
-Every finding is classified LIVE / DEAD / unverifiable / fixture —
+Every finding is classified verified / dead / unverifiable / fixture —
 never inferred. Verification is **read-only only** (HTTP GET probes,
 `openssl` cert checks). Secrets are redacted in all reports; raw
 findings and cloned repos never leave the local data dir.
