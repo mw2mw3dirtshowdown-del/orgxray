@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sondre K — Security & AI Automation Engineer</title>
+<style>
+:root{--bg:#0b0e14;--fg:#e6e9ef;--dim:#9aa3b2;--acc:#58a6ff;--ok:#3fb950;--warn:#d29922}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,Segoe UI,Roboto,sans-serif;max-width:820px;margin:0 auto;padding:48px 20px}
+h1{font-size:2em;letter-spacing:-.02em}
+h2{font-size:1.25em;margin:2em 0 .5em;color:var(--acc)}
+.sub{color:var(--dim);margin:.4em 0 1.5em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:1em 0}
+.card{background:#12161f;border:1px solid #21262d;border-radius:10px;padding:16px}
+.num{font-size:1.8em;font-weight:700;color:var(--ok)}
+.lbl{color:var(--dim);font-size:.85em}
+a{color:var(--acc);text-decoration:none}a:hover{text-decoration:underline}
+ul{padding-left:1.3em}li{margin:.3em 0}
+.tag{display:inline-block;background:#1f6feb33;color:var(--acc);border-radius:20px;padding:2px 10px;font-size:.8em;margin:2px 4px 2px 0}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:.9em}
+.bar{height:6px;background:#21262d;border-radius:3px;margin-top:8px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--ok)}
+</style>
+</head>
+<body>
+<h1>Sondre K</h1>
+<p class="sub">Security engineer &amp; AI-automation builder, Norway. I build the systems around AI agents — MCP servers, voice agents, secret-scanning pipelines — and I verify before I claim.</p>
+
+<h2>Verified work</h2>
+<div class="grid">
+<div class="card"><div class="num">78</div><div class="lbl">verified LIVE service_role keys (HTTP 200), one Supabase sweep</div></div>
+<div class="card"><div class="num">1,404</div><div class="lbl">candidate files scanned via GitHub code-search + git history</div></div>
+<div class="card"><div class="num">373</div><div class="lbl">JWTs extracted, role-filtered, live-verified read-only</div></div>
+<div class="card"><div class="num">79</div><div class="lbl">redacted disclosure drafts — human review only, never auto-sent</div></div>
+</div>
+
+<h2>OrgXray</h2>
+<p>Local-first recon + Git-history secret scanner for <b>authorized responsible disclosure</b>. Single-file Python CLI, containerized sandbox, incremental scans, evidence-backed disclosure pipeline.</p>
+<ul>
+<li>Detection tuned on measured token-efficiency (cl100k_base) — rare-not-random secrets, not just entropy</li>
+<li>Honest outcome classes: LIVE / HTTP401 / UNVERIFIED / fixture — no inflated counts</li>
+<li>79 disclosure drafts generated; nothing sent without human review</li>
+</ul>
+<p><a href="https://github.com/mw2mw3dirtshowdown-del/orgxray">github.com/mw2mw3dirtshowdown-del/orgxray</a> · <a href="https://github.com/mw2mw3dirtshowdown-del/orgxray/blob/master/CASE-STUDY.md">CASE-STUDY.md</a></p>
+
+<h2>Also running in production</h2>
+<ul>
+<li><b>Voice agent</b> — STT → LLM → TTS with persistent memory, tool-calling, scheduled tasks, TLS, self-hosted Linux</li>
+<li><b>Agent infrastructure</b> — multi-agent orchestration, MCP-style tool routing with permission scoping and confirm-before-act gates</li>
+<li><b>Automation</b> — scraping, data pipelines, 24/7 monitoring bots</li>
+</ul>
+
+<h2>Services</h2>
+<p>
+<span class="tag">MCP server / agent integration</span>
+<span class="tag">GitHub secret &amp; security audit</span>
+<span class="tag">Workflow automation &amp; scraping</span>
+<span class="tag">Responsible-disclosure reporting</span>
+</p>
+
+<h2>Contact</h2>
+<p>Email via GitHub profile · Norway-based, clients worldwide · English &amp; Norwegian.</p>
+</body>
+</html>
